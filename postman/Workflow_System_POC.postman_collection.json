@@ -1,0 +1,134 @@
+{
+  "info": {
+    "name": "Workflow System POC",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Create Timer Node",
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/nodes/create",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": {
+            "nodeId": "timer1",
+            "type": "timer",
+            "config": {
+              "message": "Write a short story about a robot learning to paint"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "2. Create Gemini Node",
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/nodes/create",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": {
+            "nodeId": "gemini1",
+            "type": "langchain",
+            "config": {}
+          }
+        }
+      }
+    },
+    {
+      "name": "3. Create FileWriter Node",
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/nodes/create",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": {
+            "nodeId": "writer1",
+            "type": "filewriter",
+            "config": {
+              "filePath": "./story.txt"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "4. Connect Timer to Gemini",
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/nodes/connect",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": {
+            "sourceId": "timer1",
+            "targetId": "gemini1"
+          }
+        }
+      }
+    },
+    {
+      "name": "5. Connect Gemini to FileWriter",
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/nodes/connect",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": {
+            "sourceId": "gemini1",
+            "targetId": "writer1"
+          }
+        }
+      }
+    },
+    {
+      "name": "6. Execute Workflow",
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/nodes/execute",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": {
+            "startNodeId": "timer1"
+          }
+        }
+      }
+    }
+  ]
+}
