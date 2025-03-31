@@ -5,7 +5,7 @@ class LangChainNode {
     constructor(id, config) {
         this.id = id;
         this.config = config;
-        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+        const genAI = new GoogleGenerativeAI(this.config.api_key);
         this.model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
     }
 
