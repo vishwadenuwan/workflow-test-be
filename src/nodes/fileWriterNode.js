@@ -2,10 +2,19 @@ const fs = require('fs').promises;
 const path = require('path');
 
 class FileWriterNode {
-    constructor(id, config) {
-        this.id = id;
-        this.config = config;
-        this.filePath = config.filePath || 'res.txt';
+    constructor(nodeId, config = {}) {
+        this.nodeId = nodeId;
+        this.config = {
+            filePath: config.filePath || './output.txt',
+            append: config.append || false
+        };
+    }
+
+    updateConfig(config) {
+        this.config = {
+            ...this.config,
+            ...config
+        };
     }
 
     async execute(input) {
@@ -20,12 +29,12 @@ class FileWriterNode {
             console.log('Content to write:', content);
 
             // Write file
-            await fs.writeFile(this.filePath, content, 'utf8');
-            console.log(`Successfully wrote to file: ${this.filePath}`);
+            await fs.writeFile(this.config.filePath, content, { flag: this.config.append ? 'a' : 'w', encoding: 'utf8' });
+            console.log(`Successfully wrote to file: ${this.config.filePath}`);
 
             return {
                 success: true,
-                filePath: this.filePath,
+                filePath: this.config.filePath,
                 message: content
             };
         } catch (error) {
@@ -33,7 +42,7 @@ class FileWriterNode {
             return {
                 success: false,
                 error: error.message,
-                filePath: this.filePath
+                filePath: this.config.filePath
             };
         }
     }
