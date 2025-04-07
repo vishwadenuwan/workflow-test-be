@@ -38,6 +38,30 @@ function nodeRouter(workflowEngine) {
         res.json(flow);
     });
 
+    // Update node configuration
+    router.put('/update/:nodeId', async (req, res) => {
+        try {
+            const { nodeId } = req.params;
+            const { config } = req.body;
+            
+            const updatedNode = await workflowEngine.updateNode(nodeId, config);
+            
+            // Emit socket event for real-time updates
+            if (workflowEngine.io) {
+                workflowEngine.io.emit('nodeUpdated', {
+                    nodeId,
+                    config,
+                    timestamp: new Date().toISOString()
+                });
+            }
+
+            res.json({ success: true, node: updatedNode });
+        } catch (error) {
+            console.error('Error updating node:', error);
+            res.status(500).json({ success: false, error: error.message });
+        }
+    });
+
     return router;
 }
 

@@ -1,12 +1,21 @@
 class TimerNode {
-    constructor(id, config) {
-        this.id = id;
-        this.config = config;
-        this.message = config.message || "Hello, I'm bob";
+    constructor(nodeId, config = {}) {
+        this.nodeId = nodeId;
+        this.config = {
+            message: config.message || 'Timer triggered',
+            interval: config.interval || 1000
+        };
+    }
+
+    updateConfig(config) {
+        this.config = {
+            ...this.config,
+            ...config
+        };
     }
 
     async execute() {
-        return { message: this.message };
+        return { message: this.config.message };
     }
 }
 
