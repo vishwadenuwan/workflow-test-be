@@ -1,23 +1,22 @@
 {
-  "name": "workflow-test",
+  "name": "workflow-test-be",
   "version": "1.0.0",
-  "main": "src/index.js",
-  "dependencies": {
-    "@google/generative-ai": "^0.1.3",
-    "dotenv": "^16.3.1",
-    "express": "^4.18.2",
-    "langchain": "^0.3.19",
-    "socket.io": "^4.8.1"
-  },
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
   },
-  "keywords": [
-    "node",
-    "express"
-  ],
-  "author": "Denuwan",
-  "license": "ISC",
-  "description": ""
+  "dependencies": {
+    "express": "^4.18.2",
+    "googleapis": "^128.0.0",
+    "google-auth-library": "^9.0.0",
+    "openai": "^4.0.0",
+    "socket.io": "^4.7.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
 }

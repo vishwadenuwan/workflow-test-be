@@ -1,6 +1,7 @@
 const { TimerNode } = require('./nodes/timerNode');
 const { LangChainNode } = require('./nodes/langChainNode');
 const { FileWriterNode } = require('./nodes/fileWriterNode');
+const GmailTriggerNode = require('./nodes/gmailTriggerNode');
 const fs = require('fs').promises;
 const path = require('path');
 
@@ -28,6 +29,9 @@ class WorkflowEngine {
                 break;
             case 'filewriter':
                 node = new FileWriterNode(nodeId, config);
+                break;
+            case 'gmailTrigger':
+                node = new GmailTriggerNode(config);
                 break;
             default:
                 throw new Error(`Unknown node type: ${type}`);
@@ -86,8 +90,31 @@ class WorkflowEngine {
         }
     }
 
-    async executeWorkflow(startNodeId) {
+    async executeWorkflow(startNodeId = null) {
         await this.initializeFromFlow();
+        
+        // If no startNodeId is provided, find the starting node from edges
+        if (!startNodeId) {
+            const flow = await this.loadFlowFile();
+            if (flow.nodes.length === 0) {
+                throw new Error('No nodes in the workflow');
+            }
+            if (flow.edges.length === 0) {
+                throw new Error('No edges in the workflow');
+            }
+
+            // Find all target nodes
+            const targetNodes = new Set(flow.edges.map(edge => edge.target));
+            
+            // Find the node that is a source but never a target
+            const startingEdge = flow.edges.find(edge => !targetNodes.has(edge.source));
+            if (!startingEdge) {
+                throw new Error('Could not find a valid starting node in the workflow');
+            }
+            
+            startNodeId = startingEdge.source;
+            console.log('Found starting node:', startNodeId);
+        }
         
         let currentNodeId = startNodeId;
         let data = null;

@@ -2,7 +2,7 @@ class TimerNode {
     constructor(nodeId, config = {}) {
         this.nodeId = nodeId;
         this.config = {
-            message: config.message || 'Timer triggered',
+            message: config.message || '',
             interval: config.interval || 1000
         };
     }

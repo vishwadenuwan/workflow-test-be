@@ -5,7 +5,7 @@ class LangChainNode {
     constructor(nodeId, config = {}) {
         this.nodeId = nodeId;
         this.config = {
-            apiKey: config.apiKey || process.env.GOOGLE_API_KEY,
+            apiKey: config.apiKey || "AIzaSyC3ui8CPbCe4SRgi4ud2jP-s848D8kH7xY",
             model: config.model || 'gemini-1.5-pro',
             prompt: config.prompt || 'Hello, how are you?'
         };
@@ -21,8 +21,24 @@ class LangChainNode {
     }
 
     async execute(input) {
+        console.log("input", input);
         try {
-            const result = await this.model.generateContent(input.message+"\n"+this.config.prompt);
+            // Handle different input types
+            let inputText = '';
+            if (typeof input === 'string') {
+                inputText = input;
+            } else if (input && typeof input === 'object') {
+                if (input.type === 'email') {
+                    inputText = input.content;
+                } else if (input.message) {
+                    inputText = input.message;
+                } else {
+                    inputText = JSON.stringify(input);
+                }
+            }
+
+            console.log("Processing input:", inputText);
+            const result = await this.model.generateContent(inputText + "\n" + this.config.prompt);
             const response = await result.response;
             return { message: response.text() };
         } catch (error) {

@@ -1,0 +1,75 @@
+{
+  "nodes": [
+    {
+      "id": "node_4",
+      "type": "gmailTrigger",
+      "config": {
+        "label": "Gmail Trigger",
+        "status": "idle",
+        "pollingInterval": 30000,
+        "isAuthenticated": false
+      }
+    },
+    {
+      "id": "node_5",
+      "type": "langchain",
+      "config": {
+        "apiKey": "AIzaSyC3ui8CPbCe4SRgi4ud2jP-s848D8kH7xY",
+        "model": "gemini-1.5-pro",
+        "prompt": "I shared some emails with you. As an intelligent assistant, can you filter the subjects in those emails?"
+      }
+    },
+    {
+      "id": "node_6",
+      "type": "filewriter",
+      "config": {
+        "filePath": "./output.txt",
+        "append": true
+      }
+    },
+    {
+      "id": "node_1",
+      "type": "gmailTrigger",
+      "config": {
+        "label": "Gmail Trigger",
+        "status": "idle",
+        "pollingInterval": 30000,
+        "isAuthenticated": false
+      }
+    },
+    {
+      "id": "node_2",
+      "type": "filewriter",
+      "config": {
+        "filePath": "./output.txt",
+        "append": false
+      }
+    },
+    {
+      "id": "node_3",
+      "type": "langchain",
+      "config": {
+        "apiKey": "AIzaSyC3ui8CPbCe4SRgi4ud2jP-s848D8kH7xY",
+        "prompt": "\nI shared some emails with you. As an intelligent assistant, can you filter the subjects in those emails?"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "node_4",
+      "target": "node_5"
+    },
+    {
+      "source": "node_5",
+      "target": "node_6"
+    },
+    {
+      "source": "node_1",
+      "target": "node_3"
+    },
+    {
+      "source": "node_3",
+      "target": "node_2"
+    }
+  ]
+}
